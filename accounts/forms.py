@@ -1,12 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import PreTest
 
-class SignUpForm(UserCreationForm):
+class PreTestForm(forms.ModelForm):
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'age', 'section', 'role', 'password1', 'password2']
-
-class LoginForm(forms.Form):
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput)
+        model = PreTest
+        exclude = ['student', 'bmi', 'vo2_max']
+        widgets = {
+            'date_of_pretest': forms.DateInput(attrs={'type': 'date'}),
+        }

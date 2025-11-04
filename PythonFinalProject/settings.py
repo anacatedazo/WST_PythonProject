@@ -46,7 +46,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Custom user model
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'student_portal.Student'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,34 +1,66 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm, LoginForm
-
+from .models import Student
+from django.contrib.auth.decorators import login_required
+from .forms import PreTestForm
 def signup_view(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')
-    else:
-        form = SignUpForm()
-    return render(request, 'accounts/signup.html', {'form': form})
+        fullname = request.POST['fullname']
+        student_id = request.POST['student_id']
+        section = request.POST['section']
+        age = request.POST['age']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        if Student.objects.filter(student_id=student_id).exists():
+            messages.error(request, "Student ID already exists.")
+            return redirect('signup')
+
+        student = Student.objects.create_user(
+            student_id=student_id,
+            fullname=fullname,
+            section=section,
+            age=age,
+            email=email,
+            password=password
+        )
+        messages.success(request, "Account created successfully! Please log in.")
+        return redirect('login')
+
+    return render(request, 'signup.html')
+
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password']
-            )
-            if user is not None:
-                login(request, user)
-                return redirect('dashboard')  # redirect to a dashboard view later
-            else:
-                form.add_error(None, 'Invalid username or password')
-    else:
-        form = LoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+        student_id = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, student_id=student_id, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Welcome back!")
+            return redirect('pretest_form')  # change later to dashboard or form
+        else:
+            messages.error(request, "Invalid Student ID or Password.")
+
+    return render(request, 'login.html')
 
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+@login_required
+def pretest_form(request):
+    if request.method == 'POST':
+        form = PreTestForm(request.POST)
+        if form.is_valid():
+            pretest = form.save(commit=False)
+            pretest.student = request.user
+            pretest.save()
+            return redirect('student_dashboard')
+    else:
+        form = PreTestForm()
+
+    return render(request, 'accounts/pretest_form.html', {'form': form})
