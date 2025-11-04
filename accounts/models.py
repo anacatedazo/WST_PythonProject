@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import User
+from django.conf import settings
+
 
 # Create your models here.
 
@@ -35,25 +38,19 @@ class Student(AbstractBaseUser):
     def __str__(self):
         return self.fullname
 
-from django.db import models
-from django.contrib.auth.models import User
 
 class PreTest(models.Model):
-    # Link each record to a student (user)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    # Account Information
     full_name = models.CharField(max_length=100)
-    student_id = models.CharField(max_length=50)
+    student_code = models.CharField(max_length=50)  # ✅ Renamed
     section = models.CharField(max_length=50)
     date_of_pretest = models.DateField()
 
-    # Physical Data
     height_cm = models.FloatField()
     weight_kg = models.FloatField()
     bmi = models.FloatField(blank=True, null=True)
 
-    # Performance Data
     vo2_max = models.FloatField(blank=True, null=True)
     flexibility_cm = models.FloatField()
     strength_reps = models.FloatField()
@@ -65,7 +62,6 @@ class PreTest(models.Model):
         return f"{self.full_name} - Pre-Test"
 
     def calculate_bmi(self):
-        """Automatic BMI computation"""
         if self.height_cm > 0:
             self.bmi = round(self.weight_kg / ((self.height_cm / 100) ** 2), 2)
         else:
@@ -73,8 +69,6 @@ class PreTest(models.Model):
         return self.bmi
 
     def calculate_vo2max(self):
-        """Simple placeholder formula for demo (you can replace later)"""
-        # Example formula (can be replaced with more scientific one)
         self.vo2_max = round(15.3 * (60 / self.speed_sec), 2) if self.speed_sec > 0 else 0
         return self.vo2_max
 

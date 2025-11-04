@@ -41,12 +41,9 @@ INSTALLED_APPS = [
     'accounts',
 ]
 
-# Static files setup
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Custom user model
-AUTH_USER_MODEL = 'student_portal.Student'
+AUTH_USER_MODEL = 'accounts.Student'
 
 
 MIDDLEWARE = [
