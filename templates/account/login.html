@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack Login</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-dark text-light">
+
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg" style="max-width: 700px; width: 100%;">
+            <div class="row g-0">
+                
+                <!-- Left Section -->
+                <div class="col-md-6 bg-danger d-flex flex-column justify-content-center align-items-center text-white p-4">
+                    <h2 class="mb-3">FitTrack</h2>
+                    <h4>Progress</h4>
+                    <div class="rounded-circle bg-light mt-4" style="width:120px; height:120px;"></div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="col-md-6 p-4">
+                    <h3 class="text-center mb-4 text-dark">LOGIN</h3>
+
+                    <form method="POST" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label text-dark">Username</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label text-dark">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <input type="checkbox" id="remember"> <label for="remember" class="text-dark">Remember me</label>
+                            </div>
+                            <a href="#" class="text-danger small">Forgot password?</a>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">Login</button>
+                        </div>
+                    </form>
+
+                    <p class="mt-3 text-center text-dark">Don’t have an account?
+                        <a href="{% url 'signup' %}" class="text-danger">Sign Up</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

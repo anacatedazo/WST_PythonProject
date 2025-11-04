@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack | Pre-Test Fitness Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="bg-dark text-light">
+
+<div class="container py-5">
+    <div class="card shadow-lg mx-auto" style="max-width: 900px;">
+        <div class="card-body">
+            <h3 class="text-center text-dark mb-4 fw-bold">FitTrack | Pre-Test Fitness Form</h3>
+            <hr>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Account -->
+                <h5 class="text-danger fw-bold mt-3">Account</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">{{ form.full_name.label_tag }}{{ form.full_name }}</div>
+                    <div class="col-md-6">{{ form.student_id.label_tag }}{{ form.student_id }}</div>
+                    <div class="col-md-6">{{ form.section.label_tag }}{{ form.section }}</div>
+                    <div class="col-md-6">{{ form.date_of_pretest.label_tag }}{{ form.date_of_pretest }}</div>
+                </div>
+
+                <!-- Physical Data -->
+                <h5 class="text-danger fw-bold mt-3">Physical Data</h5>
+                <div class="row mb-3">
+                    <div class="col-md-4">{{ form.height_cm.label_tag }}{{ form.height_cm }}</div>
+                    <div class="col-md-4">{{ form.weight_kg.label_tag }}{{ form.weight_kg }}</div>
+                    <div class="col-md-4">
+                        <label for="bmi">Your BMI</label>
+                        <input type="text" id="bmi" class="form-control" readonly>
+                    </div>
+                </div>
+                <button type="button" id="calcBMI" class="btn btn-danger mb-4">Calculate BMI</button>
+
+                <!-- Performance Data -->
+                <h5 class="text-danger fw-bold mt-3">Performance Data</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">{{ form.vo2_max.label_tag }}{{ form.vo2_max }}</div>
+                    <div class="col-md-6">{{ form.flexibility_cm.label_tag }}{{ form.flexibility_cm }}</div>
+                    <div class="col-md-6">{{ form.strength_reps.label_tag }}{{ form.strength_reps }}</div>
+                    <div class="col-md-6">{{ form.agility_sec.label_tag }}{{ form.agility_sec }}</div>
+                    <div class="col-md-6">{{ form.speed_sec.label_tag }}{{ form.speed_sec }}</div>
+                    <div class="col-md-6">{{ form.endurance_min.label_tag }}{{ form.endurance_min }}</div>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" class="btn btn-danger">Save Pre-Test</button>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("calcBMI").addEventListener("click", function() {
+    const height = parseFloat(document.querySelector("[name='height_cm']").value);
+    const weight = parseFloat(document.querySelector("[name='weight_kg']").value);
+    if (height > 0 && weight > 0) {
+        const bmi = (weight / ((height / 100) ** 2)).toFixed(2);
+        document.getElementById("bmi").value = bmi;
+    } else {
+        alert("Please enter valid height and weight values!");
+    }
+});
+</script>
+
+</body>
+</html>
